@@ -22,8 +22,8 @@ interface IGetTokenProps {
 
 const loginTitle = "Login with Yahoo! for Read Access";
 
-const apiUrl = "http://127.0.0.1:5000";
-const redirectUri = "https://localhost:3000/";
+const apiUrl = "https://fantasyfootballuploadbackend.azurewebsites.net";
+const redirectUri = "https://yellow-pebble-0b607be10.1.azurestaticapps.net/";
 const clientId = "dj0yJmk9QUJ2Yk1kQVdSbDZKJmQ9WVdrOVVXRmhXbGxtTm1zbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTM5";
 const loginUrl = "https://api.login.yahoo.com/oauth2/request_auth?response_type=code&state=&client_id=" + clientId + "&scope=&redirect_uri=" + redirectUri;
 
