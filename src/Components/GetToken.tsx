@@ -1,6 +1,5 @@
 import {
-    Button,
-    TextField,
+    Button, 
     Grid,
     CircularProgress
     }
@@ -16,13 +15,19 @@ interface IGetTokenState {
     refreshToken: string,
     loading: boolean
 }
+
+interface IGetTokenProps {
+    updateAccessToken: (accessToken: string) => void,
+}
+
 const loginTitle = "Login with Yahoo! for Read Access";
 
-const redirectUri = "https://lemon-dune-0cd4b231e.azurestaticapps.net";
+const apiUrl = "http://127.0.0.1:5000";
+const redirectUri = "https://localhost:3000/";
 const clientId = "dj0yJmk9QUJ2Yk1kQVdSbDZKJmQ9WVdrOVVXRmhXbGxtTm1zbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTM5";
 const loginUrl = "https://api.login.yahoo.com/oauth2/request_auth?response_type=code&state=&client_id=" + clientId + "&scope=&redirect_uri=" + redirectUri;
 
-export default class GetLink extends React.Component<any, IGetTokenState> {
+export default class GetLink extends React.Component<IGetTokenProps, IGetTokenState> {
 
     constructor(props: any) {
         super(props);
@@ -54,10 +59,13 @@ export default class GetLink extends React.Component<any, IGetTokenState> {
                 });
                 const ttl = expirationTimeEpoch - new Date().getTime();
                 if (ttl > 0) {
-                    setTimeout(() => {
-                        this.forceUpdate();
-                    }, ttl);
+                    this.props.updateAccessToken(accessToken);
                 }
+                // if (ttl > 0) {
+                //     setTimeout(() => {
+                //         this.forceUpdate();
+                //     }, ttl);
+                // }
             }
         }
     }
@@ -68,7 +76,7 @@ export default class GetLink extends React.Component<any, IGetTokenState> {
         this.setState({
             loading: true
         });
-        axios.get('/api/GetToken', {
+        axios.get(apiUrl + '/auth', {
             params: {
               yahoo_code: code
             }
@@ -100,7 +108,7 @@ export default class GetLink extends React.Component<any, IGetTokenState> {
             refreshToken: "",
             loading: true
         });
-        axios.get('/api/GetToken', {
+        axios.get(apiUrl + "/auth", {
             params: {
               refresh_token: refreshToken
             }
@@ -128,9 +136,10 @@ export default class GetLink extends React.Component<any, IGetTokenState> {
         localStorage.setItem("accessToken", tokenData["access_token"]);
         localStorage.setItem("refreshToken", tokenData["refresh_token"]);
         localStorage.setItem("expirationTime", expirationTime.toString());
-        setTimeout(() => {
-            this.forceUpdate();
-        }, tokenData.expires_in * 1000);
+        this.props.updateAccessToken(tokenData["access_token"]);
+        // setTimeout(() => {
+        //     this.forceUpdate();
+        // }, tokenData.expires_in * 1000);
     }
 
     public render() {
@@ -145,20 +154,10 @@ export default class GetLink extends React.Component<any, IGetTokenState> {
                 justify="space-between"
                 alignItems="center"
                 >
-                <Button className="GetToken-login-button" variant="contained" color="primary" href={loginUrl}>
+                <Button className="GetToken-login-button" variant="contained" color="primary" disabled={ this.state.loading} href={loginUrl}>
                     {loginTitle}
                 </Button>
                 { this.state.loading &&<CircularProgress className="GetToken-spinner"/> }
-                    <TextField
-                    className="GetToken-text"
-                    id="filled-multiline-flexible"
-                    label="Access Token"
-                    multiline
-                    fullWidth
-                    rows={10}
-                    value={this.state.accessToken}
-                    variant="filled"
-                    />
             </Grid>
         );
     }

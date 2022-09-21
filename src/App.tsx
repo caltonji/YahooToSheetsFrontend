@@ -1,12 +1,12 @@
 import React from 'react';
 // import logo from './logo.svg';
 import './App.css';
-import GetToken from "./Components/GetToken";
+import Main from "./Components/Main";
 
 function App() {
   return (
     <div className="App">
-      <GetToken/>
+      <Main/>
     </div>
   );
 }

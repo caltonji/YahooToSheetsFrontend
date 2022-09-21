@@ -3,7 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@material-ui/core": "^4.12.4",
+    "@mui/icons-material": "^5.10.3",
+    "@mui/material": "^5.10.3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -11,15 +15,13 @@
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.56",
     "@types/qs": "^6.9.4",
-    "@types/react": "^16.9.49",
-    "@types/react-dom": "^16.9.8",
     "axios": "^0.20.0",
     "qs": "^6.9.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "typescript": "^3.7.5"
+    "typescript": "^4.8.2"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,6 +45,8 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6",
     "@types/react-router-dom": "^5.1.5"
   }
 }
