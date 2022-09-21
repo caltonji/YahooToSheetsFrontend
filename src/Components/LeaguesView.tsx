@@ -1,29 +1,17 @@
 import React from 'react';
 import axios from 'axios';
-import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Tooltip from '@mui/material/Tooltip';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 import UploadIcon from '@mui/icons-material/Upload'; 
-import BorderAllIcon from '@mui/icons-material/BorderAll';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import FolderIcon from '@mui/icons-material/Folder';
-import DeleteIcon from '@mui/icons-material/Delete';
 
-
-const apiUrl = "http://127.0.0.1:5000";
+const apiUrl = "https://fantasyfootballuploadbackend.azurewebsites.net";
 
 interface ILeaguesViewState {
     leagues: any
