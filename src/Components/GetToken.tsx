@@ -1,13 +1,14 @@
 import {
     Button, 
-    Grid,
-    CircularProgress
+    Box
     }
     from '@material-ui/core';
 import * as React from 'react';
 import * as qs from 'qs';
 import axios from 'axios';
-import './GetToken.css';
+import MainProgress from './MainProgress';
+import Typography from '@mui/material/Typography';
+import './Main.css';
 
 interface IGetTokenState {
     accessToken: string,
@@ -22,10 +23,11 @@ interface IGetTokenProps {
 
 const loginTitle = "Login with Yahoo! for Read Access";
 
-const apiUrl = "https://fantasyfootballuploadbackend.azurewebsites.net";
-const redirectUri = "https://yellow-pebble-0b607be10.1.azurestaticapps.net/";
-const clientId = "dj0yJmk9QUJ2Yk1kQVdSbDZKJmQ9WVdrOVVXRmhXbGxtTm1zbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTM5";
-const loginUrl = "https://api.login.yahoo.com/oauth2/request_auth?response_type=code&state=&client_id=" + clientId + "&scope=&redirect_uri=" + redirectUri;
+const config = require('../config.json')[process.env.NODE_ENV || 'development'];
+const loginUrl = "https://api.login.yahoo.com/oauth2/request_auth?response_type=code&state=&client_id=" + config.clientId + "&scope=&redirect_uri=" + config.redirectUrl;
+
+const titleMessage = "Export your Fantasy Football data to Google Sheets";
+const secondMessage = "By logging into Yahoo, we get temporary Read access to your Fantasy Football leauges.";
 
 export default class GetLink extends React.Component<IGetTokenProps, IGetTokenState> {
 
@@ -76,10 +78,8 @@ export default class GetLink extends React.Component<IGetTokenProps, IGetTokenSt
         this.setState({
             loading: true
         });
-        axios.get(apiUrl + '/auth', {
-            params: {
-              yahoo_code: code
-            }
+        axios.post(config.apiUrl + '/auth', {
+            yahoo_code: code
         })
         .then( (response) => {
             console.log(response);
@@ -108,10 +108,8 @@ export default class GetLink extends React.Component<IGetTokenProps, IGetTokenSt
             refreshToken: "",
             loading: true
         });
-        axios.get(apiUrl + "/auth", {
-            params: {
-              refresh_token: refreshToken
-            }
+        axios.post(config.apiUrl + "/auth", {
+            refresh_token: refreshToken
         })
         .then( (response) => {
             console.log(response);
@@ -148,17 +146,30 @@ export default class GetLink extends React.Component<IGetTokenProps, IGetTokenSt
                 this.refresh_token(this.state.refreshToken);
         }
         return (
-            <Grid
-                container
-                direction="column"
-                justify="space-between"
-                alignItems="center"
-                >
-                <Button className="GetToken-login-button" variant="contained" color="primary" disabled={ this.state.loading} href={loginUrl}>
-                    {loginTitle}
-                </Button>
-                { this.state.loading &&<CircularProgress className="GetToken-spinner"/> }
-            </Grid>
+            <Box sx={{ width: '100%' }}>
+                { this.state.loading ?
+                // Create a centered div with a loading spinner
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                    { MainProgress("Logging In") }
+                </Box>
+                :
+                // Create a box showing titleMessage, secondMessage and Login button vertically aligned, nicely spaces
+                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                    {/* show title message with typography */}
+                    <Typography variant="h4" component="div" gutterBottom>
+                        { titleMessage }
+                    </Typography>
+                    {/* show second message with typography */}
+                    <Typography variant="h6" component="div" gutterBottom>
+                        { secondMessage }
+                    </Typography>
+                    <Button className="GetToken-login-button" variant="contained" color="primary" disabled={ this.state.loading} href={loginUrl}>
+                        {loginTitle}
+                    </Button>
+                </Box>
+
+                }
+            </Box>
         );
     }
 }

@@ -1,5 +1,5 @@
 .GetToken-login-button {
-    margin-top:150px !important;
+    margin-top:50px !important;
 }
 
 .GetToken-text {
@@ -7,9 +7,7 @@
     max-width: 80%;
 }
 
-.GetToken-spinner {
-    position: absolute;
+.Main-spinner {
     width: 100px !important;
     height: 100px !important;
-    margin-top: 350px;
 }

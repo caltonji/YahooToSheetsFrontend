@@ -1,0 +1,12 @@
+{
+    "production": {
+        "apiUrl": "https://fantasyfootballuploadbackend.azurewebsites.net",
+        "redirectUrl": "https://yellow-pebble-0b607be10.1.azurestaticapps.net/",
+        "clientId": "dj0yJmk9QUJ2Yk1kQVdSbDZKJmQ9WVdrOVVXRmhXbGxtTm1zbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTM5"
+    },
+    "development": {
+        "apiUrl": "http://127.0.0.1:5000",
+        "redirectUrl": "https://localhost:3000/",
+        "clientId": "dj0yJmk9QUJ2Yk1kQVdSbDZKJmQ9WVdrOVVXRmhXbGxtTm1zbWNHbzlNQS0tJnM9Y29uc3VtZXJzZWNyZXQmc3Y9MCZ4PTM5"
+    }
+}

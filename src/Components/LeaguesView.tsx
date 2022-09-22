@@ -10,8 +10,10 @@ import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 import UploadIcon from '@mui/icons-material/Upload'; 
 import Typography from '@mui/material/Typography';
+import MainProgress from './MainProgress';
+import './Main.css';
 
-const apiUrl = "https://fantasyfootballuploadbackend.azurewebsites.net";
+const config = require('../config.json')[process.env.NODE_ENV || 'development'];
 
 interface ILeaguesViewState {
     leagues: any
@@ -23,14 +25,10 @@ interface ILeaguesViewProps {
 }
 
 export default class LeaguesView extends React.Component<ILeaguesViewProps, ILeaguesViewState> {
-        apiParams: { params: { access_token: string; }; };
         classes: any;
-        
 
         constructor(props: any) {
             super(props);
-
-            this.apiParams = { params: { access_token: this.props.accessToken } };
     
             this.state = {
                 leagues: {},
@@ -53,8 +51,10 @@ export default class LeaguesView extends React.Component<ILeaguesViewProps, ILea
     
         private get_leagues = () => {
             this.setState({ loading: true });
-            
-            axios.get(apiUrl + '/leagues', this.apiParams)
+
+            axios.post(config.apiUrl + '/leagues', { 
+                access_token: this.props.accessToken 
+            })
             .then( (response) => {
                 console.log(response);
                 let leagues = this.build_leagues_map(response.data)
@@ -77,11 +77,9 @@ export default class LeaguesView extends React.Component<ILeaguesViewProps, ILea
             let leagues = this.state.leagues;
             leagues[key].exporting = true;
             this.setState({ leagues: leagues });
-            axios.get(apiUrl + '/export', {
-                params: {
-                    access_token: this.props.accessToken,
-                    league_key: key
-                }
+            axios.post(config.apiUrl + '/export', {
+                access_token: this.props.accessToken,
+                league_key: key
             })
             .then( (response) => {
                 console.log(response);
@@ -101,13 +99,17 @@ export default class LeaguesView extends React.Component<ILeaguesViewProps, ILea
                 this.get_leagues();
             })
         }
+
     
         render() {
             return (
                 <Box sx={{ width: '100%' }}>
-                    <h1>Leagues</h1>
-                    { this.state.loading && 
-                        <div>Loading...</div>
+                    { this.state.loading ? 
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                            { MainProgress("Fetching Leagues") }
+                        </Box>
+                        :
+                        <h1>Leagues</h1>
                     }
                     {/* Create a Box with maxwidth 720 horizontall centered  */}
                     <Box sx={{ width: '100%', maxWidth: 720, bgcolor: 'background.paper', mx: 'auto' }}>
