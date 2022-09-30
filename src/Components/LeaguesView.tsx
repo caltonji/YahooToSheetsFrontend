@@ -18,6 +18,7 @@ const config = require('../config.json')[process.env.NODE_ENV || 'development'];
 interface ILeaguesViewState {
     leagues: any
     loading: boolean
+    exporting: boolean
 }
 
 interface ILeaguesViewProps {
@@ -32,7 +33,8 @@ export default class LeaguesView extends React.Component<ILeaguesViewProps, ILea
     
             this.state = {
                 leagues: {},
-                loading: false
+                loading: false,
+                exporting: false
             }
         }
     
@@ -50,7 +52,7 @@ export default class LeaguesView extends React.Component<ILeaguesViewProps, ILea
         }
     
         private get_leagues = () => {
-            this.setState({ loading: true });
+            this.setState({ loading: true, leagues: [] });
 
             axios.post(config.apiUrl + '/leagues', { 
                 access_token: this.props.accessToken 
@@ -76,7 +78,7 @@ export default class LeaguesView extends React.Component<ILeaguesViewProps, ILea
             // set the state of leagues at league_key exporting to true
             let leagues = this.state.leagues;
             leagues[key].exporting = true;
-            this.setState({ leagues: leagues });
+            this.setState({ leagues: leagues, exporting: true });
             axios.post(config.apiUrl + '/export', {
                 access_token: this.props.accessToken,
                 league_key: key
@@ -86,14 +88,15 @@ export default class LeaguesView extends React.Component<ILeaguesViewProps, ILea
                 // set the stage of the leagues at league_key exporting to false
                 let leagues = this.state.leagues;
                 leagues[key].exporting = false;
-                this.setState({ leagues: leagues });
+
+                this.setState({ leagues: leagues, exporting: false });
             })
             .catch( (error) => {
                 console.log(error);
                 // set the stage of the leagues at league_key exporting to false
                 let leagues = this.state.leagues;
                 leagues[key].exporting = false;
-                this.setState({ leagues: leagues });
+                this.setState({ leagues: leagues, exporting: false });
             })
             .finally( () => {
                 this.get_leagues();
@@ -127,20 +130,26 @@ export default class LeaguesView extends React.Component<ILeaguesViewProps, ILea
                                         </Typography>
                                     }
                                     {/* On click of Icon Button, call the export function with league as input */}
-                                    { this.state.leagues[key].export_url ?
+                                    <IconButton disabled={this.state.exporting} edge="end" aria-label="export league" onClick={() => this.export_league(key)}>
+                                        { this.state.leagues[key].exporting ? <CircularProgress size={24} /> : <Tooltip title="Export League to Google Sheets"><UploadIcon sx={{p:0.5}}/></Tooltip> }
+                                    </IconButton>
+                                    { this.state.leagues[key].export_url && !this.state.leagues[key].exporting &&
                                         <IconButton href={this.state.leagues[key].export_url} edge="end" target="_blank">
                                             {/* Create a BorderAllIcon with a green background */}
                                             <Tooltip title={this.state.leagues[key].export_url}><ExitToAppIcon sx={{ bgcolor: 'success.main', color: 'white', p:0.5}}/></Tooltip>
                                         </IconButton>
-                                        :
-                                        <IconButton disabled={this.state.leagues[key].exporting} edge="end" aria-label="export league" onClick={() => this.export_league(key)}>
-                                            { this.state.leagues[key].exporting ? <CircularProgress size={24} /> : <Tooltip title="Export League to Google Sheets"><UploadIcon sx={{p:0.5}}/></Tooltip> }
-                                        </IconButton>
-                    }
+                                    }
                                 </ListItem>
                             ))}
                         </List>
                     </Box>
+                    {/* Add an email link to caltonji@gmail.com with the prompt "For feature requests, email: caltonji@gmail.com" add padding below */}
+                    <Box sx={{ p: 2 }}>
+                        <Typography variant="body2" color="text.secondary" align="center">
+                            For feature requests, email: <a href="mailto:caltonji@gmail.com">caltonji@gmail.com</a>
+                        </Typography>
+                    </Box>
+
                 </Box>
             )
         }
